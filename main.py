@@ -19,9 +19,15 @@ def main():
     clock = pygame.time.Clock()
     dt = 0 # delta-time
 
+    # Create groups
+    updatable = pygame.sprite.Group()
+    drawable = pygame.sprite.Group()
+
     # Create player object
     spawn_pos = Vector2(screen.get_width() / 2, screen.get_height() / 2)
     player = Player(spawn_pos.x, spawn_pos.y)
+    updatable.add(player)
+    drawable.add(player)
 
     # Game loop
     running = True
@@ -33,20 +39,18 @@ def main():
 
         # Add update logic here
         # ...
+        updatable.update(dt)
 
-        # fill the screen with a color to wipe away anything from last frame
+        # Fill the screen with a color to wipe away anything from last frame
         screen.fill("black")
 
         # Add render logic here
         # ...
-        player.draw(screen)
-        player.update(dt)
+        for sp in drawable.sprites():
+            sp.draw(screen)
 
-        # flip() the display to put your work on screen
-        pygame.display.flip()
-
-        # limits FPS to 60
-        dt = clock.tick(60) / 1000
+        pygame.display.flip()       # Refresh
+        dt = clock.tick(60) / 1000  # Calculate delta-time
 
     pygame.quit()
 
