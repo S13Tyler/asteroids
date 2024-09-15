@@ -31,11 +31,16 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
 
+        # Add update logic here
+        # ...
+
         # fill the screen with a color to wipe away anything from last frame
         screen.fill("black")
 
-        # RENDER YOUR GAME HERE
+        # Add render logic here
+        # ...
         player.draw(screen)
+        player.update(dt)
 
         # flip() the display to put your work on screen
         pygame.display.flip()
