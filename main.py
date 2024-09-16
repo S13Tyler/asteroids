@@ -6,6 +6,18 @@ import pygame
 from pygame import Vector2
 from constants import *
 from player import *
+from asteroid import Asteroid
+from asteroidfield import AsteroidField
+
+
+# Initialize pygame
+pygame.init()
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+
+
+def init_player():
+    spawn_pos = Vector2(screen.get_width() / 2, screen.get_height() / 2)
+    return Player(spawn_pos.x, spawn_pos.y)
 
 
 def main():
@@ -13,45 +25,44 @@ def main():
     print(f"Screen width: {SCREEN_WIDTH}")
     print(f"Screen height: {SCREEN_HEIGHT}")
 
-    # Setup pygame display
-    pygame.init()
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    # Setup game ticks
     clock = pygame.time.Clock()
-    dt = 0 # delta-time
+    dt = 0
 
     # Create groups
-    updatable = pygame.sprite.Group()
-    drawable = pygame.sprite.Group()
+    grp_updatable = pygame.sprite.Group()
+    grp_drawable = pygame.sprite.Group()
+    grp_asteroids = pygame.sprite.Group()
+
+    # Add groups to object static containers
+    Player.containers = (grp_updatable, grp_drawable)
+    Asteroid.containers = (grp_updatable, grp_drawable, grp_asteroids)
+    AsteroidField.containers = (grp_updatable)
 
     # Create player object
-    spawn_pos = Vector2(screen.get_width() / 2, screen.get_height() / 2)
-    player = Player(spawn_pos.x, spawn_pos.y)
-    updatable.add(player)
-    drawable.add(player)
+    player = init_player()
+    asteroid_field = AsteroidField()
 
     # Game loop
     running = True
     while running:
-        # pygame.QUIT event means the user clicked X to close your window
+        # Check if we need to break out of the game loop
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
 
-        # Add update logic here
-        # ...
-        updatable.update(dt)
-
         # Fill the screen with a color to wipe away anything from last frame
         screen.fill("black")
 
-        # Add render logic here
-        # ...
-        for sp in drawable.sprites():
-            sp.draw(screen)
+        # Update groups
+        for obj in grp_updatable:
+            obj.update(dt)
+        for obj in grp_drawable:
+            obj.draw(screen)
 
-        pygame.display.flip()       # Refresh
-        dt = clock.tick(60) / 1000  # Calculate delta-time
-
+        # Refresh and calculate delta-time
+        pygame.display.flip()
+        dt = clock.tick(60) / 1000
     pygame.quit()
 
 

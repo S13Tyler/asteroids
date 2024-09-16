@@ -8,6 +8,7 @@ from circleshape import CircleShape
 from constants import *
 
 
+# Player class
 class Player(CircleShape):
     def __init__(self, x, y):
         super().__init__(x, y, PLAYER_RADIUS)
@@ -16,10 +17,10 @@ class Player(CircleShape):
     # Returns a list of 2d points to render as a triangle
     def triangle(self):
         forward = Vector2(0, 1).rotate(self.rotation)
-        right = Vector2(0, 1).rotate(self.rotation + 90) * self.radius / 1.5
-        a = self.position + forward * self.radius
-        b = self.position - forward * self.radius - right
-        c = self.position - forward * self.radius + right
+        right = (Vector2(0, 1).rotate(self.rotation + 90) * self.radius / 1.5)
+        a = (self.position + forward * self.radius)
+        b = (self.position - forward * self.radius - right)
+        c = (self.position - forward * self.radius + right)
         return [a, b, c]
 
     def draw(self, screen):
@@ -42,11 +43,8 @@ class Player(CircleShape):
 
     def move(self, dt):
         forward_vect = Vector2(0, 1).rotate(self.rotation)
-        self.position += forward_vect * PLAYER_VELOCITY * dt
+        self.position += (forward_vect * PLAYER_VELOCITY * dt)
 
     def rotate(self, dt):
-        rotation_amount = PLAYER_ROTATION_SPEED * dt
-        # Normalize the rotation angle to stay between [0, 360]
-        self.rotation = (self.rotation + rotation_amount) % 360
-        if self.rotation < 0:
-            self.rotation += 360
+        rotation_amount = (PLAYER_ROTATION_SPEED * dt)
+        self.rotation = self.normalize_rotation(self.rotation + rotation_amount)
