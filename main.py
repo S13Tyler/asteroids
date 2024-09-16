@@ -6,6 +6,7 @@ import pygame
 from pygame import Vector2
 from constants import *
 from player import *
+from shot import Shot
 from asteroid import Asteroid
 from asteroidfield import AsteroidField
 
@@ -33,9 +34,11 @@ def main():
     grp_updatable = pygame.sprite.Group()
     grp_drawable = pygame.sprite.Group()
     grp_asteroids = pygame.sprite.Group()
+    grp_shots = pygame.sprite.Group()
 
     # Add groups to object static containers
     Player.containers = (grp_updatable, grp_drawable)
+    Shot.containers = (grp_updatable, grp_shots)
     Asteroid.containers = (grp_updatable, grp_drawable, grp_asteroids)
     AsteroidField.containers = (grp_updatable)
 
@@ -57,11 +60,17 @@ def main():
         # Group logic
         for obj in grp_updatable:
             obj.update(dt)
+        for obj in grp_shots:
+            obj.draw(screen)
         for obj in grp_drawable:
             obj.draw(screen)
         for obj in grp_asteroids:
             if obj.collision_check(player):
                 running = False
+            for shot in grp_shots:
+                if shot.collision_check(obj):
+                    shot.kill()
+                    obj.kill()
 
         # Refresh and calculate delta-time
         pygame.display.flip()
