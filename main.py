@@ -54,11 +54,14 @@ def main():
         # Fill the screen with a color to wipe away anything from last frame
         screen.fill("black")
 
-        # Update groups
+        # Group logic
         for obj in grp_updatable:
             obj.update(dt)
         for obj in grp_drawable:
             obj.draw(screen)
+        for obj in grp_asteroids:
+            if obj.collision_check(player):
+                running = False
 
         # Refresh and calculate delta-time
         pygame.display.flip()

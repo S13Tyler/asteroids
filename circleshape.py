@@ -20,6 +20,13 @@ class CircleShape(pygame.sprite.Sprite):
     def update(self, dt):
         pass
 
+    def collision_check(self, other):
+        if isinstance(other, CircleShape):
+            distance = Vector2.distance_to(self.position, other.position)
+            if distance < (self.radius + other.radius):
+                return True
+        return False
+
     def normalize_rotation(self, rotation):
         # Normalize the rotation angle to stay between [0, 360]
         result = rotation % 360
