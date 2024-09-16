@@ -23,3 +23,10 @@ class CircleShape(pygame.sprite.Sprite):
 
     def update(self, dt):
         pass
+
+    def normalize_rotation(self, rotation : int):
+        # Normalize the rotation angle to stay between [0, 360]
+        result = rotation % 360
+        if result < 0:
+            result += 360
+        return result

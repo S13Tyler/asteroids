@@ -11,7 +11,7 @@ from constants import *
 class Player(CircleShape):
     def __init__(self, x, y):
         super().__init__(x, y, PLAYER_RADIUS)
-        self.rotation = 0
+        self.rotation = 180
 
     # Returns a list of 2d points to render as a triangle
     def triangle(self):
@@ -46,7 +46,4 @@ class Player(CircleShape):
 
     def rotate(self, dt):
         rotation_amount = PLAYER_ROTATION_SPEED * dt
-        # Normalize the rotation angle to stay between [0, 360]
-        self.rotation = (self.rotation + rotation_amount) % 360
-        if self.rotation < 0:
-            self.rotation += 360
+        self.rotation = self.normalize_rotation(self.rotation + rotation_amount)
