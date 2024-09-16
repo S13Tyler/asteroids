@@ -4,6 +4,7 @@
 
 import pygame
 from pygame import Vector2
+from pygame.font import Font
 from constants import *
 from gamestate import *
 from player import *
@@ -14,8 +15,12 @@ from asteroidfield import AsteroidField
 
 # Initialize pygame
 pygame.init()
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Asteroids by S13Tyler")
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+background = pygame.image.load("images/backgrounds/Starfield_01.png").convert_alpha()
+
+# Create game state object
+gamestate = GameState()
 
 
 def init_player():
@@ -24,10 +29,6 @@ def init_player():
 
 
 def main():
-    print("Starting asteroids!")
-    print(f"Screen width: {SCREEN_WIDTH}")
-    print(f"Screen height: {SCREEN_HEIGHT}")
-
     # Setup game ticks
     clock = pygame.time.Clock()
     dt = 0
@@ -44,9 +45,6 @@ def main():
     Asteroid.containers = (grp_updatable, grp_drawable, grp_asteroids)
     AsteroidField.containers = (grp_updatable)
 
-    # Create score system
-    gamestate = GameState()
-
     # Create player object
     player = init_player()
     asteroid_field = AsteroidField()
@@ -61,6 +59,9 @@ def main():
 
         # Fill the screen with a color to wipe away anything from last frame
         screen.fill("black")
+        for x in range(0, SCREEN_WIDTH, background.get_size()[0]):
+            for y in range(0, SCREEN_HEIGHT, background.get_size()[1]):
+                screen.blit(background, (x, y))
 
         # Group logic
         for obj in grp_updatable:
@@ -71,7 +72,7 @@ def main():
             obj.draw(screen)
         for obj in grp_asteroids:
             if obj.collision_check(player):
-                running = False
+                gamestate.on_player_hit()
             for shot in grp_shots:
                 if shot.collision_check(obj):
                     shot.kill()
