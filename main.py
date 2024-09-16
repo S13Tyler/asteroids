@@ -5,6 +5,7 @@
 import pygame
 from pygame import Vector2
 from constants import *
+from gamestate import *
 from player import *
 from shot import Shot
 from asteroid import Asteroid
@@ -14,6 +15,7 @@ from asteroidfield import AsteroidField
 # Initialize pygame
 pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+pygame.display.set_caption("Asteroids by S13Tyler")
 
 
 def init_player():
@@ -41,6 +43,9 @@ def main():
     Shot.containers = (grp_updatable, grp_shots)
     Asteroid.containers = (grp_updatable, grp_drawable, grp_asteroids)
     AsteroidField.containers = (grp_updatable)
+
+    # Create score system
+    gamestate = GameState()
 
     # Create player object
     player = init_player()
