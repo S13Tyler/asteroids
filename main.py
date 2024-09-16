@@ -70,7 +70,7 @@ def main():
             for shot in grp_shots:
                 if shot.collision_check(obj):
                     shot.kill()
-                    obj.kill()
+                    obj.split()
 
         # Refresh and calculate delta-time
         pygame.display.flip()
